@@ -11,7 +11,13 @@ public class BattleSystem : MonoBehaviour
 	public GameObject playerPrefab;
 	public GameObject enemyPrefab;
 
+	//John's and Vincent's prefabs and animators
+	public GameObject johnPrefab;
+	//animControl animJA;
+
+	//character's game objects
 	GameObject playerGO;
+	GameObject johnGO;
 
 	//buttons
 	public GameObject specialButton;
@@ -23,7 +29,8 @@ public class BattleSystem : MonoBehaviour
 	public Transform enemyBattleStation;
 
 	//animators
-	animControlBridge anim;
+	//animControlBridge anim;
+	animControl anim;
 
 	Unit playerUnit;
 	Unit enemyUnit;
@@ -34,20 +41,32 @@ public class BattleSystem : MonoBehaviour
 
 	public BattleState state;
 
+	public int turnNum;
+
     // Start is called before the first frame update
     void Start()
     {
-		Disable();
+		//Disable();
 		state = BattleState.START;
 		StartCoroutine(SetupBattle());
     }
 
 	IEnumerator SetupBattle()
 	{
+
+		disableJohn();
+
+		turnNum = 1;
+
+		//sets up the player
 		playerGO = Instantiate(playerPrefab, playerBattleStation);
 		playerUnit = playerGO.GetComponent<Unit>();
 		//anim = playerGO.GetComponent<animControlBridge>();    //gets the animator from the player prefab
 
+		//sets up John
+		//johnGO = Instantiate(johnPrefab);
+
+		//sets up the enemy
 		GameObject enemyGO = Instantiate(enemyPrefab, enemyBattleStation);
 		enemyUnit = enemyGO.GetComponent<Unit>();
 
@@ -59,18 +78,21 @@ public class BattleSystem : MonoBehaviour
 		yield return new WaitForSeconds(2f);
 
 		state = BattleState.PLAYERTURN;
-		Enable();
+		//Enable();
 		PlayerTurn();
 	}
 
 	IEnumerator PlayerAttack()
 	{
+		Debug.Log(turnNum);
+
 		//anim.setBoolean("isAttacking", true);
 
 		bool isDead = enemyUnit.TakeDamage(playerUnit.damage);
 
 		enemyHUD.SetHP(enemyUnit.currentHP);
-		dialogueText.text = "big oof";
+
+		dialogueText.text = "Big Oof";
 
 		yield return new WaitForSeconds(2f);
 
@@ -82,7 +104,7 @@ public class BattleSystem : MonoBehaviour
 		} else
 		{
 			state = BattleState.ENEMYTURN;
-			Disable();
+			//Disable();
 			SetIsAttacking(false);
 			StartCoroutine(EnemyTurn());
 		}
@@ -112,6 +134,8 @@ public class BattleSystem : MonoBehaviour
 
 	IEnumerator EnemyTurn()
 	{
+		turnNum++;
+
 		dialogueText.text = enemyUnit.unitName + " attacks!";
 
 		yield return new WaitForSeconds(1f);
@@ -129,9 +153,17 @@ public class BattleSystem : MonoBehaviour
 			EndBattle();
 		} else
 		{
-			state = BattleState.PLAYERTURN;
-			Enable();
-			PlayerTurn();
+
+			if(turnNum == 3)
+            {
+				StartCoroutine(EnableJohn());
+            }
+            else
+            {
+				state = BattleState.PLAYERTURN;
+				//Enable();
+				PlayerTurn();
+			}
 		}
 
 	}
@@ -210,10 +242,30 @@ public class BattleSystem : MonoBehaviour
 	public void SetIsAttacking(bool value)
     {
 		//sets the animator to the prfabs animator
-		anim = playerGO.GetComponent<animControlBridge>();    //gets the animator from the player prefab
+		anim = playerGO.GetComponent<animControl>();    //gets the animator from the player prefab
 
 		//method in the animControl script
 		anim.SetIsAttacking(value);
     }
+
+	public void disableJohn()
+    {
+		johnPrefab.SetActive(false);
+		healButton.SetActive(false);
+	}
+
+    IEnumerator EnableJohn()
+    {
+		johnPrefab.SetActive(true);
+		healButton.SetActive(true);
+
+		dialogueText.text = "John Alexander Warnock, \"aka My Human\", joins the battle! ";
+
+		yield return new WaitForSeconds(5f);
+
+		state = BattleState.PLAYERTURN;
+		PlayerTurn();
+
+	}
 
 }
