@@ -11,7 +11,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{806E78FB-A709-D0F7-A396-E8AB8180D7FF}</ProjectGuid>
+    <ProjectGuid>{E60611EF-8317-D6C3-23BB-96DA23D0CE84}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -57,38 +57,39 @@
   <ItemGroup>
      <Compile Include="Assets\scripts\BattleHUD.cs" />
      <Compile Include="Assets\scripts\BattleSystem.cs" />
+     <Compile Include="Assets\scripts\BattleSystemOKver.cs" />
      <Compile Include="Assets\scripts\Unit.cs" />
      <Compile Include="Assets\scripts\animControl.cs" />
      <Compile Include="Assets\scripts\animControlBridge.cs" />
  <Reference Include="Unity.Timeline.Editor">
- <HintPath>C:/Users/vicen/Documents/GitHub/CVSW/CVSW/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
+ <HintPath>C:/Users/vicen/Documents/GitHub/CVSW/CRVSW/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Unity.VSCode.Editor">
- <HintPath>C:/Users/vicen/Documents/GitHub/CVSW/CVSW/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
+ <HintPath>C:/Users/vicen/Documents/GitHub/CVSW/CRVSW/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Unity.TextMeshPro.Editor">
- <HintPath>C:/Users/vicen/Documents/GitHub/CVSW/CVSW/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+ <HintPath>C:/Users/vicen/Documents/GitHub/CVSW/CRVSW/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.UI">
- <HintPath>C:/Users/vicen/Documents/GitHub/CVSW/CVSW/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
+ <HintPath>C:/Users/vicen/Documents/GitHub/CVSW/CRVSW/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
  </Reference>
  <Reference Include="Unity.Timeline">
- <HintPath>C:/Users/vicen/Documents/GitHub/CVSW/CVSW/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
+ <HintPath>C:/Users/vicen/Documents/GitHub/CVSW/CRVSW/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
  </Reference>
  <Reference Include="Unity.CollabProxy.Editor">
- <HintPath>C:/Users/vicen/Documents/GitHub/CVSW/CVSW/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
+ <HintPath>C:/Users/vicen/Documents/GitHub/CVSW/CRVSW/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Unity.Rider.Editor">
- <HintPath>C:/Users/vicen/Documents/GitHub/CVSW/CVSW/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
+ <HintPath>C:/Users/vicen/Documents/GitHub/CVSW/CRVSW/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Unity.TextMeshPro">
- <HintPath>C:/Users/vicen/Documents/GitHub/CVSW/CVSW/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+ <HintPath>C:/Users/vicen/Documents/GitHub/CVSW/CRVSW/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
  </Reference>
  <Reference Include="UnityEditor.UI">
- <HintPath>C:/Users/vicen/Documents/GitHub/CVSW/CVSW/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
+ <HintPath>C:/Users/vicen/Documents/GitHub/CVSW/CRVSW/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
  </Reference>
  <Reference Include="com.unity.quicksearch">
- <HintPath>C:/Users/vicen/Documents/GitHub/CVSW/CVSW/Library/ScriptAssemblies/com.unity.quicksearch.dll</HintPath>
+ <HintPath>C:/Users/vicen/Documents/GitHub/CVSW/CRVSW/Library/ScriptAssemblies/com.unity.quicksearch.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.AIModule">
  <HintPath>D:/Unity/2019.3.7f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
