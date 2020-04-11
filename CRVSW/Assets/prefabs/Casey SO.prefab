@@ -129,7 +129,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitName: Casey
-  damage: 0
+  damage: 10
   multiplier: 5
   maxHP: 30
   currentHP: 30

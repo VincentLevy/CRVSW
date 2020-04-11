@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 //version of Battle System that uses an "Ok" button instead of timers
 
-public enum BattleStateOK { START, PLAYER_TURN, ENEMY_TURN, WON, LOST, JOHN_IS_JOINING }
+public enum BattleStateOK { START, PLAYER_TURN, ENEMY_TURN, WON, LOST, JOHN_IS_JOINING, MESSAGE }
 
 public class BattleSystemOKver : MonoBehaviour
 {
@@ -30,7 +30,6 @@ public class BattleSystemOKver : MonoBehaviour
 	public Transform enemyBattleStation;
 
 	//animators
-	//animControlBridge anim;
 	animControl anim;
 
 	Unit playerUnit;
@@ -64,8 +63,6 @@ public class BattleSystemOKver : MonoBehaviour
 
 		turnNum = 1;
 
-		//isDead = false;
-
 		//sets up the player
 		playerGO = Instantiate(playerPrefab, playerBattleStation);
 		playerUnit = playerGO.GetComponent<Unit>();
@@ -86,8 +83,6 @@ public class BattleSystemOKver : MonoBehaviour
 
 	void PlayerAttack()
 	{
-		//Debug.Log(turnNum);
-
 		DisableButtons();
 
 		enemyIsDead = enemyUnit.TakeDamage(playerUnit.damage);
@@ -103,8 +98,6 @@ public class BattleSystemOKver : MonoBehaviour
 
 	void EnemyTurn()
 	{
-		Debug.Log("Enemy attacked");
-
 		turnNum++;
 
 		dialogueText.text = enemyUnit.unitName + " attacks!";
@@ -132,8 +125,6 @@ public class BattleSystemOKver : MonoBehaviour
 
 	void PlayerTurn()
 	{
-		Debug.Log("player turn");
-
 		DisableOkButton();
 
 		state = BattleStateOK.PLAYER_TURN;
@@ -161,8 +152,6 @@ public class BattleSystemOKver : MonoBehaviour
 
 	public void OnAttackButton()
 	{
-		Debug.Log("Casey attacked");
-
 		SetIsAttacking(true);
 		PlayerAttack();
 	}
@@ -174,13 +163,13 @@ public class BattleSystemOKver : MonoBehaviour
 	}
 
 	
-	public void DisableButtons()
+	void DisableButtons()
     {
 		attackButton.SetActive(false);
 		healButton.SetActive(false);
     }
 
-	public void EnableButtons()
+	void EnableButtons()
     {
 		attackButton.SetActive(true);
 
@@ -192,7 +181,7 @@ public class BattleSystemOKver : MonoBehaviour
 	}
 	
 	//sets the value of isAttacking
-	public void SetIsAttacking(bool value)
+	void SetIsAttacking(bool value)
     {
 		//sets the animator to the prfabs animator
 		anim = playerGO.GetComponent<animControl>();    //gets the animator from the player prefab
@@ -201,10 +190,8 @@ public class BattleSystemOKver : MonoBehaviour
 		anim.SetIsAttacking(value);
     }
 
-	public void disableJohn()
+	void disableJohn()
     {
-		Debug.Log("JA is disabled");
-
 		johnPrefab.SetActive(false);
 	}
 
@@ -214,17 +201,13 @@ public class BattleSystemOKver : MonoBehaviour
 
 		johnIn = true;
 
-		dialogueText.text = "John Alexander Warnock, \"aka My Human\", joins the battle! ";
-
-		state = BattleStateOK.JOHN_IS_JOINING;
+		SetMessage("John Alexander Warnock, \"aka My Human\", joins the battle! ");
 
 		//wait for Ok button
 	}
 
 	public void OnOkButton()
     {
-		Debug.Log("Ok");
-
 		//for the start
 		if(state == BattleStateOK.START)
         {
@@ -238,9 +221,6 @@ public class BattleSystemOKver : MonoBehaviour
 		//for the player attack
 		if(state == BattleStateOK.PLAYER_TURN)
         {
-
-			Debug.Log("Ok (player turn)");
-
 			if (enemyIsDead)
 			{
 				state = BattleStateOK.WON;
@@ -295,6 +275,12 @@ public class BattleSystemOKver : MonoBehaviour
 			PlayerTurn();
 		}
 
+		//for messages
+		if (state == BattleStateOK.MESSAGE)
+		{
+			state = BattleStateOK.PLAYER_TURN;
+			PlayerTurn();
+		}
 	}
 
 	public void EnableOkButton()
@@ -305,6 +291,13 @@ public class BattleSystemOKver : MonoBehaviour
 	public void DisableOkButton()
     {
 		okButton.SetActive(false);
+    }
+
+	void SetMessage(string message)
+    {
+		state = BattleStateOK.MESSAGE;
+
+		dialogueText.text = message;
     }
 
 }
