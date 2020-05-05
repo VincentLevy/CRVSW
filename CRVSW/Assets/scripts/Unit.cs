@@ -10,6 +10,7 @@ public class Unit : MonoBehaviour
 
 	public int damage;
 	public int multiplier;
+	public int healAmount;
 
 	public int maxHP;
 	public int currentHP;
@@ -24,11 +25,16 @@ public class Unit : MonoBehaviour
 			return false;
 	}
 
-	public void Heal(int amount)
+	public void Heal()
 	{
-		currentHP += amount;
+		currentHP += healAmount;
 		if (currentHP > maxHP)
 			currentHP = maxHP;
 	}
+
+	public void Pump()
+    {
+		damage += multiplier;
+    }
 
 }

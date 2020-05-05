@@ -15,6 +15,7 @@ public class BattleSystemOKver : MonoBehaviour
 
 	//John's and Vincent's prefabs and animators
 	public GameObject johnPrefab;
+	public GameObject vincentPrefab;
 
 	//character's game objects
 	GameObject playerGO;
@@ -24,6 +25,7 @@ public class BattleSystemOKver : MonoBehaviour
 	public GameObject attackButton;
 	public GameObject healButton;
 	public GameObject okButton;
+	public GameObject pumpButton;
 
 	//places where the characters are anchored to
 	public Transform playerBattleStation;
@@ -44,6 +46,7 @@ public class BattleSystemOKver : MonoBehaviour
 	public int turnNum;
 
 	bool johnIn;
+	bool vincentIn;
 
 	bool enemyIsDead;
 	bool playerIsDead;
@@ -55,11 +58,15 @@ public class BattleSystemOKver : MonoBehaviour
 		SetupBattle();
     }
 
-	void SetupBattle()
+    #region Battle Handler
+
+    void SetupBattle()
 	{
-		//sets up John
+		//sets up John and Vincent
 		disableJohn();
 		johnIn = false;
+		DisableVincent();
+		vincentIn = false;
 
 		turnNum = 1;
 
@@ -140,17 +147,32 @@ public class BattleSystemOKver : MonoBehaviour
 	{
 		DisableButtons();
 
-		playerUnit.Heal(5);
+		playerUnit.Heal();
 
 		playerHUD.SetHP(playerUnit.currentHP);
-		dialogueText.text = "You feel renewed strength!";
+		dialogueText.text = "Holly shit, that was strong!";
 
 		EnableOkButton();
 
 		//wait for Ok button
 	}
 
-	public void OnAttackButton()
+	void PlayerPump()
+    {
+		DisableButtons();
+
+		playerUnit.Pump();
+
+		dialogueText.text = "I mean, butterflies and whatnot, you Know? No you FEEL HYPER!!!";
+
+		EnableOkButton();
+    }
+
+    #endregion
+
+    #region buttons
+
+    public void OnAttackButton()
 	{
 		SetIsAttacking(true);
 		PlayerAttack();
@@ -162,24 +184,122 @@ public class BattleSystemOKver : MonoBehaviour
 		PlayerHeal();
 	}
 
-	
-	void DisableButtons()
+	public void OnPumpButton()
     {
-		attackButton.SetActive(false);
-		healButton.SetActive(false);
+		SetIsAttacking(true);
+		PlayerPump();
     }
 
+	public void OnOkButton()
+	{
+		//for the start
+		if (state == BattleStateOK.START)
+		{
+			PlayerTurn();
+
+			EnableButtons();
+
+			return;
+		}
+
+		//for the player attack
+		if (state == BattleStateOK.PLAYER_TURN)
+		{
+			if (enemyIsDead)
+			{
+				state = BattleStateOK.WON;
+				SetIsAttacking(false);
+				EndBattle();
+			}
+			else
+			{
+				state = BattleStateOK.ENEMY_TURN;
+				DisableButtons();
+				SetIsAttacking(false);
+				EnemyTurn();
+			}
+
+			return;
+		}
+
+		//for the enemy turn
+		if (state == BattleStateOK.ENEMY_TURN)
+		{
+
+			if (playerIsDead)
+			{
+				SetIsAttacking(false);
+				state = BattleStateOK.LOST;
+				EndBattle();
+			}
+			else
+			{
+
+				if (turnNum == 3)
+				{
+					EnableJohn();
+
+					return;
+				}
+				else if (turnNum == 4)
+                {
+					EnableVincent();
+                }
+				else
+				{
+					state = BattleStateOK.PLAYER_TURN;
+					PlayerTurn();
+				}
+			}
+
+			return;
+		}
+
+		//for messages
+		if (state == BattleStateOK.MESSAGE)
+		{
+			state = BattleStateOK.PLAYER_TURN;
+			PlayerTurn();
+
+			return;
+		}
+	}
+
+	public void EnableOkButton()
+	{
+		okButton.SetActive(true);
+	}
+
+	public void DisableOkButton()
+	{
+		okButton.SetActive(false);
+	}
+
+	void DisableButtons()
+	{
+		attackButton.SetActive(false);
+		healButton.SetActive(false);
+		pumpButton.SetActive(false);
+	}
+
 	void EnableButtons()
-    {
+	{
 		attackButton.SetActive(true);
 
-        if (johnIn)
-        {
+		if (johnIn)
+		{
 			healButton.SetActive(true);
 		}
 
+		if (vincentIn)
+		{
+			pumpButton.SetActive(true);
+		}
+
 	}
-	
+
+	#endregion
+
 	//sets the value of isAttacking
 	void SetIsAttacking(bool value)
     {
@@ -201,96 +321,25 @@ public class BattleSystemOKver : MonoBehaviour
 
 		johnIn = true;
 
-		SetMessage("John Alexander Warnock, \"aka My Human\", joins the battle! ");
+		SetMessage("John Alexander Warnock, aka \"My Human\", joins the battle! ");
 
 		//wait for Ok button
 	}
 
-	public void OnOkButton()
+	void DisableVincent()
     {
-		//for the start
-		if(state == BattleStateOK.START)
-        {
-			PlayerTurn();
-
-			EnableButtons();
-
-			return;
-		}
-
-		//for the player attack
-		if(state == BattleStateOK.PLAYER_TURN)
-        {
-			if (enemyIsDead)
-			{
-				state = BattleStateOK.WON;
-				SetIsAttacking(false);
-				EndBattle();
-			}
-			else
-			{
-				state = BattleStateOK.ENEMY_TURN;
-				DisableButtons();
-				SetIsAttacking(false);
-				EnemyTurn();
-			}
-
-			return;
-		}
-
-		//for the enemy turn
-		if(state == BattleStateOK.ENEMY_TURN)
-        {
-
-			if (playerIsDead)
-			{
-				SetIsAttacking(false);
-				state = BattleStateOK.LOST;
-				EndBattle();
-			}
-			else
-			{
-
-				if (turnNum == 3)
-				{
-					EnableJohn();
-
-					return;
-				}
-				else
-				{
-					state = BattleStateOK.PLAYER_TURN;
-					//Enable();
-					PlayerTurn();
-				}
-			}
-
-			return;
-		}
-
-		//when John joins the battle
-		if( state == BattleStateOK.JOHN_IS_JOINING)
-        {
-			state = BattleStateOK.PLAYER_TURN;
-			PlayerTurn();
-		}
-
-		//for messages
-		if (state == BattleStateOK.MESSAGE)
-		{
-			state = BattleStateOK.PLAYER_TURN;
-			PlayerTurn();
-		}
-	}
-
-	public void EnableOkButton()
-    {
-		okButton.SetActive(true);
+		vincentPrefab.SetActive(false);
     }
 
-	public void DisableOkButton()
+	void EnableVincent()
     {
-		okButton.SetActive(false);
+		vincentPrefab.SetActive(true);
+
+		vincentIn = true;
+
+		SetMessage("Vincent, NINGUEM VAI ENTENDER ISSO, joins the battle!");
+
+		//wait for Ok button
     }
 
 	void SetMessage(string message)

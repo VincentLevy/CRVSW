@@ -56,7 +56,6 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\scripts\BattleHUD.cs" />
-     <Compile Include="Assets\scripts\BattleSystem.cs" />
      <Compile Include="Assets\scripts\BattleSystemOKver.cs" />
      <Compile Include="Assets\scripts\Unit.cs" />
      <Compile Include="Assets\scripts\animControl.cs" />
