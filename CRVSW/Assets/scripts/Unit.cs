@@ -8,8 +8,13 @@ public class Unit : MonoBehaviour
 	public string unitName;
 	//public int unitLevel;
 
+	public int startingDamage;
 	public int damage;
+
+	public int startingMultiplier;
 	public int multiplier;
+
+	public int startingHeal;
 	public int healAmount;
 
 	public int maxHP;
@@ -34,7 +39,16 @@ public class Unit : MonoBehaviour
 
 	public void Pump()
     {
+		multiplier += 5;
+		healAmount += multiplier;
 		damage += multiplier;
+    }
+
+	public void Reset()
+    {
+		damage = startingDamage;
+		multiplier = startingMultiplier;
+		currentHP = maxHP;
     }
 
 }

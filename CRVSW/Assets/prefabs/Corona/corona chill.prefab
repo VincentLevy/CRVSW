@@ -95,7 +95,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitName: Corona
-  damage: 20
+  startingDamage: 30
+  damage: 30
+  startingMultiplier: 0
   multiplier: 0
   healAmount: 0
   maxHP: 100

@@ -129,8 +129,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitName: Casey
+  startingDamage: 0
   damage: 0
+  startingMultiplier: 0
   multiplier: 10
-  healAmount: 10
+  startingHeal: 0
+  healAmount: 5
   maxHP: 100
   currentHP: 100

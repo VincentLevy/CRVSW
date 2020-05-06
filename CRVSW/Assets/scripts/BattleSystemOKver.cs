@@ -103,6 +103,9 @@ public class BattleSystemOKver : MonoBehaviour
 
 		turnNum = 1;
 
+		playerUnit.Reset();
+		enemyUnit.Reset();
+
 		DisableButtons();
 
 		dialogueText.text = "A wild " + enemyUnit.unitName + " approaches...";
@@ -141,8 +144,6 @@ public class BattleSystemOKver : MonoBehaviour
 		playerIsDead = playerUnit.TakeDamage(rnd);
 
 		playerHUD.SetHP(playerUnit.currentHP);
-
-		Debug.Log(rnd);
 
 		//wait for Ok button
 	}
