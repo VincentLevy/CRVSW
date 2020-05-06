@@ -26,6 +26,7 @@ public class BattleSystemOKver : MonoBehaviour
 	public GameObject healButton;
 	public GameObject okButton;
 	public GameObject pumpButton;
+	public GameObject restartButton;
 
 	//places where the characters are anchored to
 	public Transform playerBattleStation;
@@ -68,6 +69,8 @@ public class BattleSystemOKver : MonoBehaviour
 		DisableVincent();
 		vincentIn = false;
 
+		restartButton.SetActive(false);
+
 		turnNum = 1;
 
 		//sets up the player
@@ -88,15 +91,39 @@ public class BattleSystemOKver : MonoBehaviour
 		//wait for Ok button
 	}
 
+	void restart()
+    {
+		//sets up John and Vincent
+		disableJohn();
+		johnIn = false;
+		DisableVincent();
+		vincentIn = false;
+
+		restartButton.SetActive(false);
+
+		turnNum = 1;
+
+		DisableButtons();
+
+		dialogueText.text = "A wild " + enemyUnit.unitName + " approaches...";
+
+		playerHUD.SetHUD(playerUnit);
+		enemyHUD.SetHUD(enemyUnit);
+
+		EnableOkButton();
+	}
+
 	void PlayerAttack()
 	{
 		DisableButtons();
 
-		enemyIsDead = enemyUnit.TakeDamage(playerUnit.damage);
+		int dmg = playerUnit.damage;
+
+		enemyIsDead = enemyUnit.TakeDamage(dmg);
 
 		enemyHUD.SetHP(enemyUnit.currentHP);
 
-		dialogueText.text = "Big Oof";
+		dialogueText.text = "Big Oof, you do " + dmg + " damage.";
 
 		EnableOkButton();
 
@@ -107,11 +134,15 @@ public class BattleSystemOKver : MonoBehaviour
 	{
 		turnNum++;
 
-		dialogueText.text = enemyUnit.unitName + " attacks!";
+		int rnd = Random.Range(0, enemyUnit.damage) + 1;
 
-		playerIsDead = playerUnit.TakeDamage(enemyUnit.damage);
+		dialogueText.text = enemyUnit.unitName + " attacks! You take " + rnd + " damage";
+
+		playerIsDead = playerUnit.TakeDamage(rnd);
 
 		playerHUD.SetHP(playerUnit.currentHP);
+
+		Debug.Log(rnd);
 
 		//wait for Ok button
 	}
@@ -127,6 +158,10 @@ public class BattleSystemOKver : MonoBehaviour
 		} else if (state == BattleStateOK.LOST)
 		{
 			dialogueText.text = "You were defeated.";
+
+			restartButton.SetActive(true);
+
+			//EnableOkButton();
 		}
 	}
 
@@ -189,6 +224,19 @@ public class BattleSystemOKver : MonoBehaviour
 		SetIsAttacking(true);
 		PlayerPump();
     }
+
+	public void OnGambleButton()
+    {
+		SetIsAttacking(true);
+		playerIsDead = playerUnit.TakeDamage(5);
+		PlayerAttack();
+    }
+
+	public void OnRestartButton()
+    {
+		state = BattleStateOK.START;
+		restart();
+	}
 
 	public void OnOkButton()
 	{
@@ -263,6 +311,12 @@ public class BattleSystemOKver : MonoBehaviour
 
 			return;
 		}
+
+		if(state == BattleStateOK.LOST)
+        {
+			state = BattleStateOK.START;
+			restart();
+        }
 	}
 
 	public void EnableOkButton()
