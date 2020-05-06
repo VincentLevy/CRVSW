@@ -15,6 +15,11 @@ public class SceneLoader : MonoBehaviour
         StartCoroutine(Load(SceneManager.GetActiveScene().buildIndex + 1));
     }
 
+    public void OnRestartButton()
+    {
+        StartCoroutine(Load(SceneManager.GetActiveScene().buildIndex));
+    }
+
     IEnumerator Load(int lvl)
     {
         transition.SetTrigger("Load");

@@ -91,31 +91,6 @@ public class BattleSystemOKver : MonoBehaviour
 		//wait for Ok button
 	}
 
-	void restart()
-    {
-		//sets up John and Vincent
-		disableJohn();
-		johnIn = false;
-		DisableVincent();
-		vincentIn = false;
-
-		restartButton.SetActive(false);
-
-		turnNum = 1;
-
-		playerUnit.Reset();
-		enemyUnit.Reset();
-
-		DisableButtons();
-
-		dialogueText.text = "A wild " + enemyUnit.unitName + " approaches...";
-
-		playerHUD.SetHUD(playerUnit);
-		enemyHUD.SetHUD(enemyUnit);
-
-		EnableOkButton();
-	}
-
 	void PlayerAttack()
 	{
 		DisableButtons();
@@ -233,12 +208,6 @@ public class BattleSystemOKver : MonoBehaviour
 		PlayerAttack();
     }
 
-	public void OnRestartButton()
-    {
-		state = BattleStateOK.START;
-		restart();
-	}
-
 	public void OnOkButton()
 	{
 		//for the start
@@ -313,11 +282,6 @@ public class BattleSystemOKver : MonoBehaviour
 			return;
 		}
 
-		if(state == BattleStateOK.LOST)
-        {
-			state = BattleStateOK.START;
-			restart();
-        }
 	}
 
 	public void EnableOkButton()
