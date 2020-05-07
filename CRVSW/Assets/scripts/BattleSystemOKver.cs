@@ -27,6 +27,8 @@ public class BattleSystemOKver : MonoBehaviour
 	public GameObject okButton;
 	public GameObject pumpButton;
 	public GameObject restartButton;
+	public GameObject gambleButton;
+	public GameObject blockButton;
 
 	//places where the characters are anchored to
 	public Transform playerBattleStation;
@@ -46,8 +48,9 @@ public class BattleSystemOKver : MonoBehaviour
 
 	public int turnNum;
 
-	bool johnIn;
-	bool vincentIn;
+	public bool johnIn;
+	public bool vincentIn;
+	public bool secondFight;
 
 	bool enemyIsDead;
 	bool playerIsDead;
@@ -63,11 +66,15 @@ public class BattleSystemOKver : MonoBehaviour
 
     void SetupBattle()
 	{
-		//sets up John and Vincent
-		disableJohn();
-		johnIn = false;
-		DisableVincent();
-		vincentIn = false;
+        //sets up John and Vincent
+        if (!johnIn)
+        {
+			DisableJohn();
+		}
+        if (!vincentIn)
+        {
+			DisableVincent();
+		}
 
 		restartButton.SetActive(false);
 
@@ -97,7 +104,11 @@ public class BattleSystemOKver : MonoBehaviour
 
 		int dmg = playerUnit.damage;
 
+		Debug.Log("player damage = " + dmg);
+
 		enemyIsDead = enemyUnit.TakeDamage(dmg);
+
+		//Debug.Log("player damage = " + dmg);
 
 		enemyHUD.SetHP(enemyUnit.currentHP);
 
@@ -114,9 +125,18 @@ public class BattleSystemOKver : MonoBehaviour
 
 		int rnd = Random.Range(0, enemyUnit.damage) + 1;
 
-		dialogueText.text = enemyUnit.unitName + " attacks! You take " + rnd + " damage";
+		int dmg = rnd - playerUnit.armour;
 
-		playerIsDead = playerUnit.TakeDamage(rnd);
+		if(dmg < 0)
+        {
+			dmg = 0;
+        }
+
+		dialogueText.text = enemyUnit.unitName + " attacks! You take " + dmg + " damage";
+
+		Debug.Log("Damage = " + rnd + " dmg  = " + dmg + " Armour = " + playerUnit.armour);
+
+		playerIsDead = playerUnit.TakeDamage(dmg);
 
 		playerHUD.SetHP(playerUnit.currentHP);
 
@@ -161,11 +181,31 @@ public class BattleSystemOKver : MonoBehaviour
 		playerUnit.Heal();
 
 		playerHUD.SetHP(playerUnit.currentHP);
-		dialogueText.text = "Holly shit, that was strong!";
+		dialogueText.text = "Holly shit, that was delicious!";
 
 		EnableOkButton();
 
 		//wait for Ok button
+	}
+
+	void PlayerGamble()
+    {
+		DisableButtons();
+
+		int selfDmg = Random.Range(0, 10);
+		int dmg = selfDmg * playerUnit.damage / 4;
+
+		enemyIsDead = enemyUnit.TakeDamage(dmg);
+		enemyHUD.SetHP(enemyUnit.currentHP);
+
+		playerIsDead = playerUnit.TakeDamage(selfDmg);
+		playerHUD.SetHP(playerUnit.currentHP);
+
+		Debug.Log(selfDmg + " " + dmg);
+
+		dialogueText.text = "Ouch, you do " + dmg + " damage, but take " + selfDmg;
+
+		EnableOkButton();
 	}
 
 	void PlayerPump()
@@ -178,6 +218,17 @@ public class BattleSystemOKver : MonoBehaviour
 
 		EnableOkButton();
     }
+
+	void PlayerBlock()
+    {
+		DisableButtons();
+
+		playerUnit.ArmourUp();
+
+		dialogueText.text = "That Manhattan was Strong! You feel like you can take anything!!!";
+
+		EnableOkButton();
+	}
 
     #endregion
 
@@ -204,8 +255,13 @@ public class BattleSystemOKver : MonoBehaviour
 	public void OnGambleButton()
     {
 		SetIsAttacking(true);
-		playerIsDead = playerUnit.TakeDamage(5);
-		PlayerAttack();
+		PlayerGamble();
+    }
+
+	public void OnBlockButton()
+    {
+		SetIsAttacking(true);
+		PlayerBlock();
     }
 
 	public void OnOkButton()
@@ -253,13 +309,13 @@ public class BattleSystemOKver : MonoBehaviour
 			else
 			{
 
-				if (turnNum == 3)
+				if (turnNum == 3 && !johnIn)
 				{
 					EnableJohn();
 
 					return;
 				}
-				else if (turnNum == 4)
+				else if (turnNum == 4 && !vincentIn)
                 {
 					EnableVincent();
                 }
@@ -299,6 +355,8 @@ public class BattleSystemOKver : MonoBehaviour
 		attackButton.SetActive(false);
 		healButton.SetActive(false);
 		pumpButton.SetActive(false);
+		gambleButton.SetActive(false);
+		blockButton.SetActive(false);
 	}
 
 	void EnableButtons()
@@ -315,6 +373,12 @@ public class BattleSystemOKver : MonoBehaviour
 			pumpButton.SetActive(true);
 		}
 
+        if (secondFight)
+        {
+			blockButton.SetActive(true);
+			gambleButton.SetActive(true);
+        }
+
 	}
 
 	#endregion
@@ -329,7 +393,7 @@ public class BattleSystemOKver : MonoBehaviour
 		anim.SetIsAttacking(value);
     }
 
-	void disableJohn()
+	void DisableJohn()
     {
 		johnPrefab.SetActive(false);
 	}
