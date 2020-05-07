@@ -23,8 +23,6 @@ public class Unit : MonoBehaviour
 
 	public bool TakeDamage(int dmg)
 	{
-		Debug.Log(unitName + " damage = " + dmg);
-
 		currentHP -= dmg;
 
 		if (currentHP <= 0)

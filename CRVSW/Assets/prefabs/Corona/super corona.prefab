@@ -96,7 +96,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitName: Super Corona
   damage: 30
-  multiplier: 5
-  healAmount: 5
-  maxHP: 200
-  currentHP: 200
+  multiplier: 7
+  healAmount: 7
+  maxHP: 500
+  currentHP: 500
+  armour: 2

@@ -29,6 +29,7 @@ public class BattleSystemOKver : MonoBehaviour
 	public GameObject restartButton;
 	public GameObject gambleButton;
 	public GameObject blockButton;
+	public GameObject nextFightButton;
 
 	//places where the characters are anchored to
 	public Transform playerBattleStation;
@@ -76,6 +77,7 @@ public class BattleSystemOKver : MonoBehaviour
 			DisableVincent();
 		}
 
+		nextFightButton.SetActive(false);
 		restartButton.SetActive(false);
 
 		turnNum = 1;
@@ -104,7 +106,7 @@ public class BattleSystemOKver : MonoBehaviour
 
 		int dmg = playerUnit.damage;
 
-		Debug.Log("player damage = " + dmg);
+		//Debug.Log("player damage = " + dmg);
 
 		enemyIsDead = enemyUnit.TakeDamage(dmg);
 
@@ -121,26 +123,60 @@ public class BattleSystemOKver : MonoBehaviour
 
 	void EnemyTurn()
 	{
+		int choice = Random.Range(1, 100);
+
+        if (!secondFight) { choice = 1; }
+
+		if (choice < 60)
+        {
+			EnemyAttack();
+        }
+		else if(choice >= 60 && choice < 80)
+        {
+			EnemyHeal();
+        }
+		else if(choice >= 80)
+        {
+			EnemyPump();
+        }
+
+		//wait for Ok button
+	}
+
+	void EnemyAttack()
+    {
 		turnNum++;
 
 		int rnd = Random.Range(0, enemyUnit.damage) + 1;
 
 		int dmg = rnd - playerUnit.armour;
 
-		if(dmg < 0)
-        {
+		if (dmg < 0)
+		{
 			dmg = 0;
-        }
+		}
 
 		dialogueText.text = enemyUnit.unitName + " attacks! You take " + dmg + " damage";
-
-		Debug.Log("Damage = " + rnd + " dmg  = " + dmg + " Armour = " + playerUnit.armour);
 
 		playerIsDead = playerUnit.TakeDamage(dmg);
 
 		playerHUD.SetHP(playerUnit.currentHP);
+	}
 
-		//wait for Ok button
+	void EnemyHeal()
+    {
+		enemyUnit.Heal();
+
+		enemyHUD.SetHP(enemyUnit.currentHP);
+
+		dialogueText.text = enemyUnit.unitName + " restores its health!";
+	}
+
+	void EnemyPump()
+    {
+		enemyUnit.Pump();
+
+		dialogueText.text = enemyUnit.unitName + " gets stronger!";
 	}
 
 	void EndBattle()
@@ -150,7 +186,17 @@ public class BattleSystemOKver : MonoBehaviour
 
 		if(state == BattleStateOK.WON)
 		{
-			dialogueText.text = "You won the battle!";
+
+            if (!secondFight)
+            {
+				dialogueText.text = "You won the battle! Brace yourself for the next one!!!";
+				nextFightButton.SetActive(true);
+			}
+            else
+            {
+				dialogueText.text = "Congratulations! You have defeated the Super Corona!!! Now life can go back to normal....";
+            }
+
 		} else if (state == BattleStateOK.LOST)
 		{
 			dialogueText.text = "You were defeated.";
@@ -192,8 +238,8 @@ public class BattleSystemOKver : MonoBehaviour
     {
 		DisableButtons();
 
-		int selfDmg = Random.Range(0, 10);
-		int dmg = selfDmg * playerUnit.damage / 4;
+		int selfDmg = Random.Range(0, 50);
+		int dmg = Random.Range(0, 10) * playerUnit.damage;
 
 		enemyIsDead = enemyUnit.TakeDamage(dmg);
 		enemyHUD.SetHP(enemyUnit.currentHP);
@@ -201,7 +247,7 @@ public class BattleSystemOKver : MonoBehaviour
 		playerIsDead = playerUnit.TakeDamage(selfDmg);
 		playerHUD.SetHP(playerUnit.currentHP);
 
-		Debug.Log(selfDmg + " " + dmg);
+		//Debug.Log(selfDmg + " " + dmg);
 
 		dialogueText.text = "Ouch, you do " + dmg + " damage, but take " + selfDmg;
 
